@@ -1,0 +1,10 @@
+.env
+.DS_Store
+
+# IDEs
+.idea/
+.vscode/
+
+# go coverage tool output
+coverage.out
+coverage.xml

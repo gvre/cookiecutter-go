@@ -1,0 +1,15 @@
+# See https://golangci-lint.run/usage/configuration/
+# for all configuration options.
+
+run:
+  modules-download-mode: readonly
+
+linters:
+  enable:
+    - asciicheck
+    - durationcheck
+    - exportloopref
+    - gosec
+    - makezero
+    - predeclared
+    - unconvert

@@ -1,0 +1,61 @@
+version: "3.7"
+
+services:
+  app:
+    container_name: {{ cookiecutter.github.repository }}
+    build:
+      context: .
+    volumes:
+      - .:/app
+      - gomodules:/go/pkg/mod
+    environment:
+      - DOCKER_BUILDKIT=1
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      database:
+        condition: service_healthy
+
+  database:
+    container_name: {{ cookiecutter.github.repository }}-database
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max_binlog_size=10MB
+    restart: always
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - mysqldata:/var/lib/mysql
+    environment:
+      - DOCKER_BUILDKIT=1
+      - MYSQL_HOST
+      - MYSQL_PORT
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+    env_file:
+      - .env
+    healthcheck:
+      test: mysql ${MYSQL_DATABASE} --user=${MYSQL_USER} --password='${MYSQL_PASSWORD}' --silent --execute 'SELECT 1;'
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  migrate:
+    container_name: {{ cookiecutter.github.repository }}-migrate
+    build:
+      context: .
+      target: migrations
+    image: {{ cookiecutter.github.repository }}:migrations
+    volumes:
+      - ./migrations:/migrations
+      - ./testdata/migrations:/testdata/migrations
+    environment:
+      - DOCKER_BUILDKIT=1
+    network_mode: host
+    depends_on:
+      database:
+        condition: service_healthy
+
+volumes:
+  gomodules:
+  mysqldata:

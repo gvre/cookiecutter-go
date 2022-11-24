@@ -1,0 +1,27 @@
+name: Verify Branch
+
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  verify-branch:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-go@v2
+        with:
+          go-version: {{ cookiecutter.go.version }}
+          check-latest: true
+
+      - name: Run linters
+        run: make lint
+
+      - name: Bootstrap
+        run: make bootstrap
+
+      - name: Run tests
+        run: make test

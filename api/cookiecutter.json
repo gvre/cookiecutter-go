@@ -1,0 +1,19 @@
+{
+    "app": {
+        "name": "myapp",
+        "description": "my app description",
+        "version": "v1"
+    },
+    "contact": {
+        "team": "myteam",
+        "name": "My Team",
+        "url": "http://myurl.tld/"
+    },
+    "github": {
+        "org": "gvre",
+        "repository": "myapp"
+    },
+    "go": {
+        "version": "1.19"
+    }
+}

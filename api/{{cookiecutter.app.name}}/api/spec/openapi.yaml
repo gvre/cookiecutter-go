@@ -1,0 +1,65 @@
+openapi: 3.0.2
+
+info:
+  version: 0.0.1
+  title: {{ cookiecutter.app.name }}
+  description: |
+    {{ cookiecutter.app.description }}
+  contact:
+    name: {{ cookiecutter.contact.name }}
+    url: {{ cookiecutter.contact.url }}
+
+servers:
+  - url: http://localhost:8080/{{ cookiecutter.app.version }}
+
+paths:
+  /:
+    get:
+      summary: Returns the API liveness
+      responses:
+        200:
+          description: API liveness status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LivenessStatus"
+              example: |
+                {
+                  "status": "ok",
+                  "version": "1.2.3",
+                  "buildDate": "2022-09-01T00:00:00Z",
+                  "goVersion": "1.19"
+                }
+
+  /spec:
+    get:
+      summary: Returns the location to the OpenAPI spec
+      responses:
+        200:
+          description: OpenAPI spec in yaml
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APISpec"
+
+components:
+  schemas:
+    LivenessStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          description: A message saying the status is "ok"
+        version:
+          type: string
+          description: Application version
+        buildDate:
+          type: string
+          description: Application build date
+        goVersion:
+          type: string
+          description: Go version the application was built with
+
+    APISpec:
+      type: string
+      description: OpenAPI yaml spec
