@@ -28,7 +28,6 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
 
 # prod environment
 FROM builder AS prod-builder
-ARG LDFLAGS
 RUN --mount=type=cache,target=/root/.cache/go-build \
     CGO_ENABLED=0 go build -buildvcs=true -a -trimpath -ldflags "-extldflags '-static' -s -w" -o main
 
